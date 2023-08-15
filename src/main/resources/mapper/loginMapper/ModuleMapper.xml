@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zkh.entity.user.Module">
+
+    <insert id="saveData" parameterType="com.zkh.entity.user.Module" >
+         insert into HT_HOTEL_MODULE(
+               PUID
+              ,PARENT_PUID
+              ,MODULE_NAME
+              ,MODULE_CODE
+              ,MODULE_URL
+              ,HASCHILD
+              ,SORT
+              ,BAK
+              ,STATUS
+              ,CREATE_TIME
+              ,CREATOR
+              ,UPDATE_TIME
+              ,UPDATER
+         )values (
+             #{puid,jdbcType=VARCHAR}
+             ,#{parentPuid,jdbcType=VARCHAR}
+             ,#{moduleName,jdbcType=VARCHAR}
+             ,#{moduleCode,jdbcType=VARCHAR}
+             ,#{moduleUrl,jdbcType=VARCHAR}
+             ,#{hasChild,jdbcType=VARCHAR}
+             ,#{sort,jdbcType=VARCHAR}
+             ,#{bak,jdbcType=VARCHAR}
+             ,#{status,jdbcType=VARCHAR}
+             ,to_date(#{createTime},'yyyy-mm-dd hh24:mi:ss')
+             ,#{creator,jdbcType=VARCHAR}
+             ,to_date(#{updateTime},'yyyy-mm-dd hh24:mi:ss')
+             ,#{updater,jdbcType=VARCHAR}
+         )
+
+    </insert>
+<!--  存疑-->
+    <select id="selectURLByPuid" parameterType="java.lang.String" resultType="com.zkh.entity.user.Module">
+        select m.MODULE_CODE , m.MODULE_URL,m.MODULE_NAME
+        from HT_HOTEL_MODULE m
+        left join HT_HOTEL_MODULE_AUTH  ma on m.PUID = ma.MODULE_ID
+        left join HT_HOTEL_AUTH a on a.PUID = ma.AUTH_ID
+        left join HT_HOTEL_ROLE_AUTH ra on ra.MODULE_AUTH_ID = ma.PUID
+        left join HT_HOTEL_ROLE r on r.ID = ra.ROLE_ID
+        left join HT_HOTEL_USER_ROLE ur on ur.ROLE_PUID = r.ID
+        left join HT_HOTEL_USER u on u.PUID = ur.USER_PUID
+         where u.PUID = #{puid}
+         and u.STATUS='1'
+         and ur.STATUS='1'
+         and ra.STATUS='1'
+         and a.STATUS = '1'
+         and ma.STATUS='1'
+         and m.STATUS='1'
+         and a.AUTH_CODE='QUERY'
+
+    </select>
+
+    <select id="selectModule"  resultType="com.zkh.entity.user.Module">
+         select PUID,MODULE_NAME,MODULE_CODE,MODULE_URL from HT_HOTEL_MODULE
+         where STATUS='1'
+    </select>
+
+    <update id="updateData" parameterType="com.zkh.entity.user.Module">
+        update HT_HOTEL_MODULE set
+         UPDATE_TIME = #{updateTime}
+        ,UPDATER = #{updater}
+        <if test=" parentPuid !='' and parentPuid != null">
+            ,PARENT_PUID = #{parentPuid}
+        </if>
+        <if test=" moduleName !='' and moduleName != null">
+            ,MODULE_NAME = #{moduleName}
+        </if>
+        <if test=" moduleCode !='' and moduleCode != null">
+            ,MODULE_CODE = #{moduleCode}
+        </if>
+        <if test=" moduleUrl !='' and moduleUrl != null">
+            ,MODULE_URL = #{moduleUrl}
+        </if>
+        <if test=" hasChild !='' and hasChild != null">
+            ,HASCHILD = #{hasChild}
+        </if>
+        <if test=" sort !='' and sort != null">
+            ,SORT = #{sort}
+        </if>
+        <if test=" bak !='' and bak != null">
+            ,BAK = #{bak}
+        </if>
+        <if test=" status !='' and status != null">
+            ,STATUS = #{status}
+        </if>
+
+    </update>
+
+
+</mapper>

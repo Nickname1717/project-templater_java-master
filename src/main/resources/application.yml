@@ -1,0 +1,23 @@
+
+#spring:
+#  datasource:
+#    username: HAITIAN
+#    password: haitian1234
+#    url: jdbc:oracle:thin:@192.168.100.76:1521:orcl
+#    driver-class-name: oracle.jdbc.OracleDriver
+spring:
+  datasource:
+    username: c##khz
+    password: Zhu19930216
+    url: jdbc:oracle:thin:@localhost:1521:ORCLNEW
+    driver-class-name: oracle.jdbc.OracleDriver
+server:
+  servlet:
+    context-path: /projectTemplate
+  port: 8181
+logging:
+  level:
+    root: info
+
+
+
